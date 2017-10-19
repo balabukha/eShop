@@ -1,0 +1,40 @@
+.cart{
+    border: 1px solid dimgrey;
+    /*display: block;*/
+    width: 200px;
+    height: 300px;
+    text-align: center;
+    float: left;
+    margin: 5px;
+}
+
+.cart .name{
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.cost{
+    font-size: 1.2rem;
+}
+
+.add-to-cart{
+    padding: 10px 20px;
+    border: none;
+    background-color: grey;
+    color: white;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.add-to-cart:hover{
+    background-color: lightgray;
+}
+
+.add-to-cart:active{
+    background-color: forestgreen;
+}
+
+.wrap{
+    display: block;
+}
