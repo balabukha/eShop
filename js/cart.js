@@ -1,6 +1,6 @@
 cart = {};
 var getLocalStorage = JSON.parse(localStorage.getItem("CART"));
-// console.log(JSON);
+console.log(getLocalStorage);
 
 // getting JSON DATA
 function loadJSON(callback) {
@@ -42,12 +42,10 @@ function isEmptyCart(){
 };
 
 
-
-
 function showMainCart(allItems){
     for (let id in getLocalStorage){
 
-        console.log('id', id);
+        // console.log('id', id);
         console.log(allItems[id]);
         // console.log(getLocalStorage);
 
@@ -56,6 +54,3 @@ function showMainCart(allItems){
 
 init();
 // console.log(loadCART());
-
-
-console.log('sss');
