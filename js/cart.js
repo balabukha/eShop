@@ -41,6 +41,9 @@ function isEmptyCart(){
     }
 };
 
+
+
+
 function showMainCart(allItems){
     for (let id in getLocalStorage){
 
@@ -53,3 +56,6 @@ function showMainCart(allItems){
 
 init();
 // console.log(loadCART());
+
+
+console.log('sss');
