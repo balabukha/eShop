@@ -1,6 +1,6 @@
 cart = {};
 var getLocalStorage = JSON.parse(localStorage.getItem("CART"));
-console.log(getLocalStorage);
+// console.log(getLocalStorage);
 
 // getting JSON DATA
 function loadJSON(callback) {
@@ -43,11 +43,18 @@ function isEmptyCart(){
 
 
 function showMainCart(allItems){
+let str = '';
     for (let id in getLocalStorage){
+        str += `
+        <div>
+        <img src="images/${allItems[id-1].img}" alt="">
+        <span>${allItems[id-1].name}</span>
+        <span>куплено:</span>
+        <span>${getLocalStorage[allItems[id-1].id]}</span>
+        </div>`;
 
-        // console.log('id', id);
-        console.log(allItems[id]);
-        // console.log(getLocalStorage);
+        let div = document.querySelector('.main-cart');
+        div.innerHTML = str;
 
     }
 }
