@@ -47,6 +47,7 @@ let str = '';
     for (let id in getLocalStorage){
         str += `
         <div>
+        <button class="mainCartDelete">X</button>
         <img src="images/${allItems[id-1].img}" alt="">
         <span>${allItems[id-1].name}</span>
         <span>куплено:</span>
@@ -57,6 +58,11 @@ let str = '';
         div.innerHTML = str;
 
     }
+
+    let deleteBtn = document.querySelectorAll('.mainCartDelete');
+    deleteBtn.forEach((item)=>{
+        return item.addEventListener('click', ()=>{console.log(this)})
+    })
 }
 
 init();
