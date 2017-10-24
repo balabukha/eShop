@@ -1,6 +1,6 @@
 cart = {};
 var getLocalStorage = JSON.parse(localStorage.getItem("CART"));
-// console.log(JSON);
+// console.log(getLocalStorage);
 
 // getting JSON DATA
 function loadJSON(callback) {
@@ -42,20 +42,63 @@ function isEmptyCart(){
 };
 
 
-
-
 function showMainCart(allItems){
+let str = '';
     for (let id in getLocalStorage){
+        str += `
+        <div>
+        <button class="mainCartDelete" data-id="${allItems[id-1].id}">X</button>
+        <img src="images/${allItems[id-1].img}" alt="">
+        <span>${allItems[id-1].name}</span>
+        <span>куплено:</span>
+        <span>${getLocalStorage[allItems[id-1].id]}</span>
+        </div>`;
 
-        console.log('id', id);
-        console.log(allItems[id]);
-        // console.log(getLocalStorage);
+        let div = document.querySelector('.main-cart');
+        div.innerHTML = str;
 
     }
+
+    function onDelete(e){
+        let id = +this.getAttribute("data-id");
+        let newLocalStorage = {};
+        console.log("id",id);
+        console.log("getLocalStorage",getLocalStorage[id]);
+        for(let item in getLocalStorage){
+            if(id == +item){
+                console.log("+item",+item);
+                delete getLocalStorage.item;
+                console.log(getLocalStorage);
+            } else {
+                console.log('no element', getLocalStorage.id, id);
+                newLocalStorage[item] = getLocalStorage[item];
+
+            }
+        }
+        let serialObj = JSON.stringify(newLocalStorage);
+        localStorage.setItem("CART", serialObj);
+        console.log("newLocalStorage", newLocalStorage)
+        console.log("serialObj", serialObj)
+        getLocalStorage = newLocalStorage;
+        console.log("getLocalStorage", getLocalStorage)
+
+        loadJSON(function(response) {
+            // Parse JSON string into object
+            let allItems = JSON.parse(response);
+            // let str = '';
+            // if(isEmptyCart()){
+                showMainCart(allItems)
+            // } else(
+            //     showMainCart(allItems)
+            // )
+        });
+    }
+
+    let deleteBtn = document.querySelectorAll('.mainCartDelete');
+    deleteBtn.forEach((item)=>{
+        console.log(item);
+        return item.addEventListener('click', onDelete)
+    })
 }
 
 init();
-// console.log(loadCART());
-
-
-console.log('sss');
