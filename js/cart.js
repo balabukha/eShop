@@ -23,27 +23,18 @@ function init() {
         // Parse JSON string into object
         let allItems = JSON.parse(response);
         let str = '';
-        if(isEmptyCart()){
-            str = 'the cart is Empty!'
-        } else(
             showMainCart(allItems)
-        )
 })
-};
-
-
-
-function isEmptyCart(){
-    if (!getLocalStorage) {
-        return true;
-    } else {
-        return false;
-    }
 };
 
 
 function showMainCart(allItems){
 let str = '';
+    if(isEmpty(getLocalStorage)){
+        str = '<p>no elements</p>';
+        let div = document.querySelector('.main-cart');
+        div.innerHTML = str;
+    };
     for (let id in getLocalStorage){
         str += `
         <div>
@@ -51,7 +42,9 @@ let str = '';
         <img src="images/${allItems[id-1].img}" alt="">
         <span>${allItems[id-1].name}</span>
         <span>куплено:</span>
+        <button class="mainCartMinus" data-id="${allItems[id-1].id}">-</button>
         <span>${getLocalStorage[allItems[id-1].id]}</span>
+        <button class="mainCartPlus" data-id="${allItems[id-1].id}">+</button>
         </div>`;
 
         let div = document.querySelector('.main-cart');
@@ -59,46 +52,126 @@ let str = '';
 
     }
 
+    function saveCart(object){
+        let serialObj = JSON.stringify(object);
+        localStorage.setItem("CART", serialObj);
+    }
+
     function onDelete(e){
         let id = +this.getAttribute("data-id");
         let newLocalStorage = {};
-        console.log("id",id);
-        console.log("getLocalStorage",getLocalStorage[id]);
+        for(let item in getLocalStorage){
+            if(id != +item){
+                newLocalStorage[item] = getLocalStorage[item];
+            }
+        }
+        getLocalStorage = newLocalStorage;
+
+        saveCart(getLocalStorage);
+        init();
+    }
+
+    function onMinus(e){
+        console.log('minus', e);
+        let id = +this.getAttribute("data-id");
         for(let item in getLocalStorage){
             if(id == +item){
-                console.log("+item",+item);
-                delete getLocalStorage.item;
-                console.log(getLocalStorage);
-            } else {
-                console.log('no element', getLocalStorage.id, id);
-                newLocalStorage[item] = getLocalStorage[item];
+            //     if(getLocalStorage[+item] === 1){
+            //         onDelete();
+            //         console.log("getLocalStorage[+item]",getLocalStorage[+item])
+            //     }
+            // } else {
+                if (getLocalStorage[+item] === 1){
+                //
+                    console.log("1")
+                } else {
+                    console.log("more 1");
+                    getLocalStorage[item]--;
+                }
 
             }
         }
-        let serialObj = JSON.stringify(newLocalStorage);
-        localStorage.setItem("CART", serialObj);
-        console.log("newLocalStorage", newLocalStorage)
-        console.log("serialObj", serialObj)
-        getLocalStorage = newLocalStorage;
-        console.log("getLocalStorage", getLocalStorage)
+        saveCart(getLocalStorage);
+        init();
+    };
 
-        loadJSON(function(response) {
-            // Parse JSON string into object
-            let allItems = JSON.parse(response);
-            // let str = '';
-            // if(isEmptyCart()){
-                showMainCart(allItems)
-            // } else(
-            //     showMainCart(allItems)
-            // )
-        });
-    }
+    function onPlus(e){
+        console.log('plus', e);
+        let id = +this.getAttribute("data-id");
+        for(let item in getLocalStorage){
+            if(id == +item){
+                getLocalStorage[item]++;
+            }
+        }
+        saveCart(getLocalStorage);
+        init();
+    };
 
+    // DELETE BTN
     let deleteBtn = document.querySelectorAll('.mainCartDelete');
     deleteBtn.forEach((item)=>{
         console.log(item);
         return item.addEventListener('click', onDelete)
-    })
+    });
+
+    // MINUS BTN
+    let minusBtn = document.querySelectorAll('.mainCartMinus');
+    minusBtn.forEach((item)=>{
+        console.log(item);
+        return item.addEventListener('click', onMinus)
+    });
+
+    // PLUS BTN
+    let PlusBtn = document.querySelectorAll('.mainCartPlus');
+    PlusBtn.forEach((item)=>{
+        console.log(item);
+        return item.addEventListener('click', onPlus)
+    });
+
+    function isEmpty(obj) {
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
 }
+
+let buttonSend = document.querySelector('.sendMsg');
+buttonSend.addEventListener('click', sendMsg);
+
+function sendMsg(){
+    let name = document.getElementById('name').value;
+    let email = document.getElementById('email').value;
+    let text = document.getElementById('text').value;
+    if (name && email && text){
+        console.log(name,email,text);
+
+        var xhr = new XMLHttpRequest();
+        let json = JSON.stringify({
+            "name": name,
+            "email": email,
+            "text": text,
+            "content": getLocalStorage
+        });
+        xhr.open("POST", '/submit', true)
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState != 4) return;
+
+            alert( this.responseText );
+        };
+
+// Отсылаем объект в формате JSON и с Content-Type application/json
+// Сервер должен уметь такой Content-Type принимать и раскодировать
+        xhr.send(json);
+
+
+
+    } else {
+        alert('fill all fields')
+    }
+};
 
 init();
